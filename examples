@@ -1,0 +1,39 @@
+Mutation to post a photo
+
+mutation newPhoto($input: PostPhotoInput!) {
+  postPhoto(input: $input) {
+    id
+    url
+    created
+  }
+}
+
+{
+  "input": {
+    "name": "Hanging at the Arc",
+    "description": "Sunny on the deck of the Arc",
+    "category": "LANDSCAPE"
+  }
+}
+
+query getPhotos($filter:PhotoFilter $page:DataPage $sort:DataSort) {
+  allPhotos(filter:$filter paging:$page sorting:$sort) {
+    id
+    name
+    url
+  }
+}
+
+{
+  "filter": {
+    "category": "ACTION"
+    "taggedUsers": ["MoonTahoe", "EvePorcello"]
+    "createdBetween": {
+      "start": "2018-11-6"
+      "end": "2010-5-31"
+    }
+  },
+  "page": {
+    "first": 100
+  }
+}

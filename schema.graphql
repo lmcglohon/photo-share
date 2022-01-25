@@ -20,18 +20,48 @@ enum SortablePhotoField {
   created
 }
 
+input PostPhotoInput{
+  name: String!
+  description: String
+  category: PhotoCategory=PORTRAIT
+}
+
+input PhotoFilter{
+  category: PhotoCategory
+  createdBetween: DateRange
+  taggedUsers: [ID!]
+  searchText: String
+}
+
+input DateRange{
+  start: DateTime!
+  end: DateTime!
+}
+
+input DataPage{
+  first: Int = 25
+  start: Int = 0
+}
+
+input DataSort{
+  sort: SortDirection = DESCENDING
+  sortBy: SortablePhotoField = created
+}
+
 type User {
   githubLogin: ID!
   name: String
   avatar: String
   postedPhotos(
-    first: Int=25
-    start: Int=0
-    sort: SortDirection = DESCENDING
-    sortBy: SortablePhotoField = created
-    category: PhotoCategory
+    filter: PhotoFilter
+    paging: DataPage
+    sorting: DataSort
   ): [Photo!]!
-  inPhotos: [Photo!]!
+  inPhotos(
+    filter: PhotoFilter
+    paging: DataPage
+    sorting: DataSort
+  ): [Photo!]!
 }
 
 type Photo {
@@ -42,33 +72,27 @@ type Photo {
   created: DateTime!
   category: PhotoCategory!
   postedBy: User!
-  taggedUsers: [User!]!
+  taggedUsers(sorting: DataSort): [User!]!
 }
 
 type Query {
   totalPhotos: Int!
   totalUsers: Int!
   allUsers(
-    first: Int=50
-    start: Int=0
+    paging: DataPage
+    sorting: DataSort
   ): [User!]!
   User(githubLogin: ID!): User!
   Photo(id: ID!): Photo!
   allPhotos(
-    first: Int=25
-    start: Int=0
-    category: PhotoCategory
-    sort: SortDirection = DESCENDING
-    sortBy: SortablePhotoField = created
+    filter: PhotoFilter
+    paging: DataPage
+    sorting: DataSort
   ): [Photo!]!
 }
 
 type Mutation {
-  postPhoto(
-    name: String!
-    description: String
-    category: PhotoCategory=PORTRAIT
-  ): Photo!
+  postPhoto(input: PostPhotoInput!): Photo!
 }
 
 schema{
