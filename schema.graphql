@@ -63,6 +63,15 @@ type Query {
   ): [Photo!]!
 }
 
+type Mutation {
+  postPhoto(
+    name: String!
+    description: String
+    category: PhotoCategory=PORTRAIT
+  ): Photo!
+}
+
 schema{
   query: Query
+  mutation: Mutation
 }
