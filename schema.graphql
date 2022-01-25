@@ -95,7 +95,13 @@ type Mutation {
   postPhoto(input: PostPhotoInput!): Photo!
 }
 
+type Subscription {
+  newPhoto: Photo!
+  newUser: User!
+}
+
 schema{
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
